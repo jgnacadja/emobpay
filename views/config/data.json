@@ -1,0 +1,14 @@
+
+{
+  "financialTransactionId": "1045583177",
+  "externalId": "1234",
+  "amount": "100",
+  "currency": "EUR",
+  "payer": {
+    "partyIdType": "MSISDN",
+    "partyId": "22966666530"
+  },
+  "payerMessage": "success",
+  "payeeNote": "note",
+  "status": "SUCCESSFUL"
+}

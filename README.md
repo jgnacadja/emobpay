@@ -1,8 +1,20 @@
-# Sample GitLab Project
+# Example payment module
 
-This sample project shows how a project in GitLab looks for demonstration purposes. It contains issues, merge requests and Markdown files in many branches,
-named and filled with lorem ipsum.
+## About
 
-You can look around to get an idea how to structure your project and, when done, you can safely delete this project.
+This repository provides an example to kick start your own payment module development. For more information, head on to the [Official Developer Documentation][documentation].
 
-[Learn more about creating GitLab projects.](https://docs.gitlab.com/ee/gitlab-basics/create-project.html)
+## Contributing
+
+PrestaShop modules are open source extensions to the [PrestaShop e-commerce platform][prestashop]. Everyone is welcome and even encouraged to contribute with their own improvements!
+
+Just make sure to follow our [contribution guidelines][contribution-guidelines].
+
+## License
+
+This module is released under the [Academic Free License 3.0][AFL-3.0] 
+
+[documentation]: https://devdocs.prestashop.com/1.7/modules/
+[prestashop]: https://www.prestashop.com/
+[contribution-guidelines]: https://devdocs.prestashop.com/1.7/contribute/contribution-guidelines/project-modules/
+[AFL-3.0]: https://opensource.org/licenses/AFL-3.0
