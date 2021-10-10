@@ -2,6 +2,10 @@
 session_start();
 class MobilePayMomoModuleFrontController extends ModuleFrontController
 {
+    /*
+     * payement process class.
+     * Send data to external  payement UI
+     */
             
 
     public function initContent()

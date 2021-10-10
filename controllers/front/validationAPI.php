@@ -29,34 +29,39 @@ class MobilePayValidationAPIModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign([
             'params' => $_REQUEST,
         ]);
-        
-       
-       if(isset($_GET['status']))
-       {
-            $status = $_GET['status'];
 
-            $order_status = Configuration::get('PS_OS_ERROR');
-            
-            if($status == '202')
-                $order_status = Configuration::get('PS_OS_PAYMENT');
-            
-            $this->module->validateOrder(
-                    (int) $this->context->cart->id,
-                    $order_status,
-                    (float) $this->context->cart->getOrderTotal(true, Cart::BOTH),
-                    $this->module->displayName,
-                    null,
-                    null,
-                    (int) $this->context->currency->id,
-                    false
-                    
-            );   
-            Tools::redirect('index.php?controller=order-detail&id_cart='.(int)$cart->id.'&id_module='.(int)$this->module->id.'&id_order='.$this->module->currentOrder);
-        
+        if (!isset($_GET['status'])) return ;
+
+        $status = $_GET['status'];
+
+        $order_status = Configuration::get('PS_OS_ERROR');
+
+        if($status === 202) {
+
+            // validate user order
+            $history = New OrderHistory();
+
+            $history->id_order = (int)$this->module->currentOrder;
+            $history->changeIdOrderState(2, (int)$history->id_order); //order status=2 Payment  Accepted
+            $order_status = Configuration::get('PS_OS_PAYMENT');
         }
-       
-        
-        
+
+        $this->module->validateOrder(
+            (int) $this->context->cart->id,
+            $order_status,
+            (float) $this->context->cart->getOrderTotal(true, Cart::BOTH),
+            $this->module->displayName,
+            null,
+            null,
+            (int) $this->context->currency->id,
+            false
+
+        );
+        Tools::redirect('index.php?controller=order-detail&id_cart='.(int)$cart->id.'&id_module='.(int)$this->module->id.'&id_order='.$this->module->currentOrder);
+
+
+
+
     }
 
 

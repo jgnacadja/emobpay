@@ -18,7 +18,7 @@ class MobilePay extends PaymentModule
 
     public function __construct()
     {
-        $this->name = 'mobilepay';
+        $this->name = 'ps_mobilepay';
         $this->tab = 'payments_gateways';
         $this->version = '1.0.0';
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
@@ -32,7 +32,7 @@ class MobilePay extends PaymentModule
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->displayName = $this->l('Mobile Pay');
+        $this->displayName = $this->l('Prestahop Mobile Pay');
         $this->description = $this->l('Paiement securise par Mobile Money');
 
         if (!count(Currency::checkPaymentCurrencies($this->id))) {
@@ -47,7 +47,12 @@ class MobilePay extends PaymentModule
         }
         return true;
     }
-
+    public function uninstall()
+    {
+        if (!parent::uninstall() || !Configuration::deleteByName('ps_mobilepay'))
+            return false;
+        return true;
+    }
     public function hookPaymentOptions($params)
     {
         if (!$this->active) {
@@ -87,7 +92,7 @@ class MobilePay extends PaymentModule
         $MomoOption = new PaymentOption();
         $MomoOption->setCallToActionText($this->l('Mobile Money '))
                      ->setAction($this->context->link->getModuleLink($this->name, 'momo', array(), true))
-                     ->setAdditionalInformation($this->context->smarty->fetch('module:mobilepay/views/templates/front/payment_infos.tpl'));
+                     ->setAdditionalInformation($this->context->smarty->fetch('module:ps_mobilepay/views/templates/front/payment_infos.tpl'));
                     // ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/payment.jpg'));
                    // ->setLogo(_MODULE_DIR_.'paymentexample/views/img/logo.png');
 
