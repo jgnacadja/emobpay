@@ -30,7 +30,7 @@ class MobilePayMomoModuleFrontController extends ModuleFrontController
         
 
         $token= Tools::getToken(false);
-        Tools::redirect("https://interface-ui-module-momo-floraaviss.vercel.app/?".'data='.$encrypt.'&token='.$token.'&path='.$url.'&techno='.$techno);
+        Tools::redirect("https://emobpay.rintio.com/?".'data='.$encrypt.'&token='.$token.'&path='.$url.'&techno='.$techno);
     }
 
 }
