@@ -50,25 +50,15 @@ class MobilePay extends PaymentModule
     public function uninstall()
     {
         if (!parent::uninstall() || !Configuration::deleteByName('ps_mobilepay'))
-            return false;
+            {return false;}
         return true;
     }
     public function hookPaymentOptions($params)
     {
-        if (!$this->active) {
-            return;
+        if($this->active && $this->checkCurrency($params['cart'])){
+            return [ $this->getMomoPaymentOption()];
         }
-
-        if (!$this->checkCurrency($params['cart'])) {
-            return;
-        }
-
-        $payment_options = [
-             $this->getMomoPaymentOption(),
-        ];
-
-
-        return $payment_options;
+        
     }
 
     public function checkCurrency($cart)
