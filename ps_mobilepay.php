@@ -49,9 +49,7 @@ class MobilePay extends PaymentModule
     }
     public function uninstall()
     {
-        if (!parent::uninstall() || !Configuration::deleteByName('ps_mobilepay'))
-            {return false;}
-        return true;
+        return (!parent::uninstall() || !Configuration::deleteByName('ps_mobilepay')) ? false : true;
     }
     public function hookPaymentOptions($params)
     {
