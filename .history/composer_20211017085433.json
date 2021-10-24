@@ -1,0 +1,16 @@
+{
+    "name": "prestashop/mobilepay",
+    "description": "PrestaShop module mobilepay",
+    "license": "AFL-3.0",
+    "authors": [{
+        "name": "jacquesgnacadja@Rintio",
+        "email": "contact@rintio.com"
+    }],
+    "require": {
+        "php": "=.4"
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "type": "prestashop-module"
+}
