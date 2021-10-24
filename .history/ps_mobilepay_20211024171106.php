@@ -79,32 +79,20 @@ class Ps_MobilePay extends PaymentModule
         }
     }
 
-    public function hookPaymentReturn($params)
-    {
-        /**
-         * Verify if this module is enabled
-         */
-        if (!$this->active) {
-            return;
-        }
- 
-        return $this->fetch('module:ps_mobilepay/views/templates/front/payment_return.tpl');
-    }
     
     public function checkCurrency($cart)
     {
         $currency_order = new Currency($cart->id_currency);
         $currencies_module = $this->getCurrency($cart->id_currency);
-        $isdefined = true;
+
         if (is_array($currencies_module)) {
             foreach ($currencies_module as $currency_module) {
-                $isdefined &= ($currency_order->id == $currency_module['id_currency']);
-                // if ($currency_order->id == $currency_module['id_currency']) {
-                //     return true;
-                // }
+                if ($currency_order->id == $currency_module['id_currency']) {
+                    return true;
+                }
             }
         }
-        return isdefined;
+        return false;
     }
 
 

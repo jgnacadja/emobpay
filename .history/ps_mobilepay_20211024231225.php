@@ -104,7 +104,7 @@ class Ps_MobilePay extends PaymentModule
                 // }
             }
         }
-        return isdefined;
+        return false;
     }
 
 

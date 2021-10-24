@@ -98,13 +98,13 @@ class Ps_MobilePay extends PaymentModule
         $isdefined = true;
         if (is_array($currencies_module)) {
             foreach ($currencies_module as $currency_module) {
-                $isdefined &= ($currency_order->id == $currency_module['id_currency']);
-                // if ($currency_order->id == $currency_module['id_currency']) {
-                //     return true;
-                // }
+                $isdefined &= ()
+                if ($currency_order->id == $currency_module['id_currency']) {
+                    return true;
+                }
             }
         }
-        return isdefined;
+        return false;
     }
 
 
