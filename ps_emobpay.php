@@ -6,7 +6,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class Ps_MobilePay extends PaymentModule
+class Ps_EmobPay extends PaymentModule
 {
     protected $_html = '';
     protected $_postErrors = array();
@@ -18,27 +18,23 @@ class Ps_MobilePay extends PaymentModule
 
     public function __construct()
     {
-        parent::__construct();
-        $this->name = 'ps_mobilepay';
+        $this->name = 'Ps_EmobPay';
         $this->tab = 'payments_gateways';
         $this->version = '1.0.0';
+        $this->need_instance = 1;
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
-        $this->author = 'RINTIO Company';
+        $this->author = 'Jacques GNACADJA';
         $this->controllers = array('validation');
         $this->is_eu_compatible = 1;
         $this->currencies = true;
         $this->currencies_mode = 'checkbox';
         $this->bootstrap = true;
-        $this->displayName = $this->l('Prestahop Mobile Payment gateway');
+        parent::__construct();
+        $this->displayName = $this->l('Passerelle E-MobPay');
         $this->description = $this->l(
             'Acceptez des paiements par Mobile Money via la plateforme E-Mobpay'.
             "<a href='https://emobpay.rintio.com' target='_blank'>En savoir plus </a>"
         );
-
-      
-        // if (!count(Currency::checkPaymentCurrencies($this->id))) {
-        //     $this->warning = $this->l('No currency has been set for this module..');
-        // }
     }
 
     /**
@@ -54,15 +50,15 @@ class Ps_MobilePay extends PaymentModule
     
     public function install()
     {
-        return parent::install()
-            && $this->registerHook('PaymentOptions')
-            && $this->registerHook('PaymentReturn');
+        return (parent::install()
+        && $this->registerHook(['paymentOptions','paymentReturn' ]))?
+        true : false;
     }
     public function uninstall()
     {
-        return parent::uninstall()
-               && Configuration::deleteByName($this->name);
-        //return (!parent::uninstall() || !Configuration::deleteByName('ps_mobilepay')) ? false : true;
+        return (parent::uninstall()
+               && Configuration::deleteByName($this->name))?
+               true : false;
     }
     public function hookPaymentOptions($params)
     {
@@ -72,13 +68,23 @@ class Ps_MobilePay extends PaymentModule
         * --------------------------------
         * Setting new payment options for administration purposes
         */
-        if ($this->active
-        // && $this->checkCurrency($params['cart'])
-        ) {
-            return $this->getMomoPaymentOption();
+        
+        if (!$this->active) {
+            return;
         }
-    }
 
+        // if (!$this->checkCurrency($params['cart'])) {
+        //     return;
+        // }
+
+        $payment_options = [
+            $this->getMomoPaymentOption()
+            
+        ];
+
+        return $payment_options;
+    }
+    
     public function hookPaymentReturn($params)
     {
         /**
@@ -88,7 +94,9 @@ class Ps_MobilePay extends PaymentModule
             return;
         }
  
-        return $this->fetch('module:ps_mobilepay/views/templates/front/payment_return.tpl');
+        return $this->fetch(
+            'module:ps_emobpay/views/templates/front/payment_return.tpl'
+        );
     }
     
     public function checkCurrency($cart)
@@ -99,24 +107,19 @@ class Ps_MobilePay extends PaymentModule
         if (is_array($currencies_module)) {
             foreach ($currencies_module as $currency_module) {
                 $isdefined &= ($currency_order->id == $currency_module['id_currency']);
-                // if ($currency_order->id == $currency_module['id_currency']) {
-                //     return true;
-                // }
             }
         }
-        return isdefined;
+        return $isdefined;
     }
 
 
     public function getMomoPaymentOption()
     {
         $MomoOption = new PaymentOption();
-        $MomoOption->setCallToActionText($this->l('Paiement Mobile '))
+        $MomoOption->setCallToActionText($this->l('Paiement Mobile'))
                      ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
-                     ->setAdditionalInformation($this->context->smarty->fetch('module:ps_mobilepay/views/templates/front/payment_infos.tpl'))
+                     ->setAdditionalInformation($this->context->smarty->fetch('module:ps_emobpay/views/templates/front/payment_infos.tpl'))
                      ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/e.png'));
-        return [$MomoOption];
+        return $MomoOption;
     }
-
-    
 }
