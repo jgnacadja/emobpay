@@ -31,7 +31,5 @@ class MobilePayValidationModuleFrontController extends ModuleFrontController
         $this->context->smarty->assign([
             'params' => $_REQUEST,
         ]);
-       
     }
-    
 }

@@ -4,10 +4,8 @@
 
 class MobilePayValidationAPIModuleFrontController extends ModuleFrontController
 {
-
     public function postProcess()
     {
-
         $cart = $this->context->cart;
         if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active) {
             Tools::redirect('index.php?controller=order&step=1');
@@ -30,16 +28,18 @@ class MobilePayValidationAPIModuleFrontController extends ModuleFrontController
             'params' => $_REQUEST,
         ]);
 
-        if (!isset($_GET['status'])) return ;
+        if (!isset($_GET['status'])) {
+            return ;
+        }
 
         $status = $_GET['status'];
 
         $order_status = Configuration::get('PS_OS_ERROR');
 
-        if($status === 202) {
+        if ($status === 202) {
 
             // validate user order
-            $history = New OrderHistory();
+            $history = new OrderHistory();
 
             $history->id_order = (int)$this->module->currentOrder;
             $history->changeIdOrderState(2, (int)$history->id_order); //order status=2 Payment  Accepted
@@ -55,16 +55,7 @@ class MobilePayValidationAPIModuleFrontController extends ModuleFrontController
             null,
             (int) $this->context->currency->id,
             false
-
         );
         Tools::redirect('index.php?controller=order-detail&id_cart='.(int)$cart->id.'&id_module='.(int)$this->module->id.'&id_order='.$this->module->currentOrder);
-
-
-
-
     }
-
-
-
-} 
-
+}
