@@ -18,7 +18,7 @@ class Ps_EmobPay extends PaymentModule
 
     public function __construct()
     {
-        $this->name = 'Ps_EmobPay';
+        $this->name = 'ps_emobpay';
         $this->tab = 'payments_gateways';
         $this->version = '1.0.0';
         $this->need_instance = 1;
@@ -32,8 +32,7 @@ class Ps_EmobPay extends PaymentModule
         parent::__construct();
         $this->displayName = $this->l('Passerelle E-MobPay');
         $this->description = $this->l(
-            'Acceptez des paiements par Mobile Money via la plateforme E-Mobpay'.
-            "<a href='https://emobpay.rintio.com' target='_blank'>En savoir plus </a>"
+            'Acceptez des paiements par Mobile Money via la plateforme E-Mobpay'
         );
     }
 
@@ -50,9 +49,10 @@ class Ps_EmobPay extends PaymentModule
     
     public function install()
     {
-        return (parent::install()
-        && $this->registerHook(['paymentOptions','paymentReturn' ]))?
-        true : false;
+        if (!parent::install() || !$this->registerHook('paymentOptions') || !$this->registerHook('paymentReturn')) {
+            return false;
+        }
+        return true;
     }
     public function uninstall()
     {
