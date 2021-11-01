@@ -8,7 +8,7 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
  * @link     https://github.com/jgnacadja
  */
-class MobilePayMomoModuleFrontController extends ModuleFrontController
+class ps_emobpaymomoModuleFrontController extends ModuleFrontController
 {
     /**
      * Payement process class.

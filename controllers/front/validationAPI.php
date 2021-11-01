@@ -2,7 +2,7 @@
 
 
 
-class MobilePayValidationAPIModuleFrontController extends ModuleFrontController
+class ps_emobpayValidationAPIModuleFrontController extends ModuleFrontController
 {
     public function postProcess()
     {
@@ -14,14 +14,14 @@ class MobilePayValidationAPIModuleFrontController extends ModuleFrontController
         // Check that this payment option is still available in case the customer changed his address just before the end of the checkout process
         $authorized = false;
         foreach (Module::getPaymentModules() as $module) {
-            if ($module['name'] == 'mobilepay') {
+            if ($module['name'] == 'ps_emobpay') {
                 $authorized = true;
                 break;
             }
         }
 
         if (!$authorized) {
-            die($this->module->l('This payment method is not available.', 'validation'));
+            die($this->module->l('This payment method is not available.', 'momo'));
         }
 
         $this->context->smarty->assign([

@@ -39,7 +39,7 @@ class Ps_EmobPay extends PaymentModule
         $this->need_instance = 1;
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
         $this->author = 'Jacques GNACADJA';
-        $this->controllers = array('validation');
+        $this->controllers = array('momo');
         $this->is_eu_compatible = 1;
         $this->currencies = true;
         $this->currencies_mode = 'checkbox';
@@ -152,7 +152,7 @@ class Ps_EmobPay extends PaymentModule
     {
         $MomoOption = new PaymentOption();
         $MomoOption->setCallToActionText($this->l('Paiement Mobile'))
-                     ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
+                     ->setAction($this->context->link->getModuleLink($this->name, 'momo', array(), true))
                      ->setAdditionalInformation(
                          $this->context->smarty->fetch(
                              'module:ps_emobpay/views/templates/front/payment_infos.tpl'
