@@ -1,13 +1,21 @@
 <?php
-session_start();
+/**
+ * MyClass Class Doc Comment
+ *
+ * @category Class
+ * @package  MobileMoney
+ * @author   jgnacadja <unis.gnacadja@gmail.com>
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
+ * @link     https://github.com/jgnacadja
+ */
 class MobilePayMomoModuleFrontController extends ModuleFrontController
 {
-    /*
-     * payement process class.
+    /**
+     * Payement process class.
      * Send data to external  payement UI
-     */
-            
-
+     * 
+     * @return string
+     **/       
     public function initContent()
     {
         parent::initContent();
@@ -15,14 +23,15 @@ class MobilePayMomoModuleFrontController extends ModuleFrontController
             
         $cart = $this->context->cart;
         $total = (int)$cart->getOrderTotal(true, Cart::BOTH);
-        $url = Context::getContext()->link->getModuleLink('mobilepay', 'validationAPI', array());
+        $url = Context::getContext()->link->getModuleLink(
+            'mobilepay', 'validationAPI', array()
+        );
         
-        $this->context->smarty->assign([
-            
+        $this->context->smarty->assign(
+            [
             'total' => $total,
-            'validationAPI' => $url,
-            
-        ]);
+            'validationAPI' => $url]
+        );
 
         $encrypt = md5($total);
         $url .= $_SERVER['REQUEST_URI'];
@@ -30,6 +39,10 @@ class MobilePayMomoModuleFrontController extends ModuleFrontController
         
 
         $token= Tools::getToken(false);
-        Tools::redirect("https://emobpay.rintio.com/?".'data='.$encrypt.'&token='.$token.'&path='.$url.'&techno='.$techno);
+        Tools::redirect(
+            "https://emobpay.rintio.com/?".
+            'data='.$encrypt.'&token='.
+            $token.'&path='.$url.'&techno='.$techno
+        );
     }
 }

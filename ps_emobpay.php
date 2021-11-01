@@ -1,4 +1,13 @@
 <?php
+/**
+ * MyClass Class Doc Comment
+ *
+ * @category Class
+ * @package  Emobpay
+ * @author   jgnacadja <unis.gnacadja@gmail.com>
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
+ * @link     https://github.com/jgnacadja
+ */
 
 use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 
@@ -8,14 +17,20 @@ if (!defined('_PS_VERSION_')) {
 
 class Ps_EmobPay extends PaymentModule
 {
-    protected $_html = '';
-    protected $_postErrors = array();
+    protected $html = '';
+    protected $postErrors = array();
 
     public $details;
     public $owner;
     public $address;
     public $extra_mail_vars;
 
+    /**
+     * Modudule EmobPay identifier process class.
+     * Send data to external  payement UI
+     * 
+     * @return
+     **/       
     public function __construct()
     {
         $this->name = 'ps_emobpay';
@@ -44,9 +59,14 @@ class Ps_EmobPay extends PaymentModule
      */
     public function getContent()
     {
-        return $this->_html;
+        return $this->html;
     }
     
+    /**
+     * Modudule installer .
+     * 
+     * @return Boolean
+     **/ 
     public function install()
     {
         if (!parent::install() || !$this->registerHook('paymentOptions') || !$this->registerHook('paymentReturn')) {
@@ -54,12 +74,23 @@ class Ps_EmobPay extends PaymentModule
         }
         return true;
     }
+    /**
+     * Modudule Uninstaller .
+     * 
+     * @return Boolean
+     **/ 
     public function uninstall()
     {
         return (parent::uninstall()
                && Configuration::deleteByName($this->name))?
                true : false;
     }
+
+    /**
+     * Hook Payment . identifier
+     * 
+     * @return $payment_Option
+     **/ 
     public function hookPaymentOptions($params)
     {
         /*
@@ -72,11 +103,6 @@ class Ps_EmobPay extends PaymentModule
         if (!$this->active) {
             return;
         }
-
-        // if (!$this->checkCurrency($params['cart'])) {
-        //     return;
-        // }
-
         $payment_options = [
             $this->getMomoPaymentOption()
             
@@ -85,6 +111,14 @@ class Ps_EmobPay extends PaymentModule
         return $payment_options;
     }
     
+
+    /**
+     * Hired function for payment return process .
+     * 
+     * @param $params used in payment process
+     * 
+     * @return Boolean
+     **/ 
     public function hookPaymentReturn($params)
     {
         /**
@@ -98,6 +132,7 @@ class Ps_EmobPay extends PaymentModule
             'module:ps_emobpay/views/templates/front/payment_return.tpl'
         );
     }
+    
     
     public function checkCurrency($cart)
     {
@@ -118,8 +153,16 @@ class Ps_EmobPay extends PaymentModule
         $MomoOption = new PaymentOption();
         $MomoOption->setCallToActionText($this->l('Paiement Mobile'))
                      ->setAction($this->context->link->getModuleLink($this->name, 'validation', array(), true))
-                     ->setAdditionalInformation($this->context->smarty->fetch('module:ps_emobpay/views/templates/front/payment_infos.tpl'))
-                     ->setLogo(Media::getMediaPath(_PS_MODULE_DIR_.$this->name.'/views/img/e.png'));
+                     ->setAdditionalInformation(
+                         $this->context->smarty->fetch(
+                             'module:ps_emobpay/views/templates/front/payment_infos.tpl'
+                             )
+                        )
+                     ->setLogo(
+                         Media::getMediaPath(
+                             _PS_MODULE_DIR_.$this->name.'/views/img/e.png'
+                        )
+                    );
         return $MomoOption;
     }
 }
