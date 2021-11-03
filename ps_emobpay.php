@@ -49,6 +49,7 @@ class Ps_EmobPay extends PaymentModule
         $this->description = $this->l(
             'Acceptez des paiements par Mobile Money via la plateforme E-Mobpay'
         );
+        
     }
 
     /**
@@ -69,6 +70,8 @@ class Ps_EmobPay extends PaymentModule
      **/ 
     public function install()
     {
+       
+
         if (!parent::install() || !$this->registerHook('paymentOptions') || !$this->registerHook('paymentReturn')) {
             return false;
         }
@@ -82,7 +85,9 @@ class Ps_EmobPay extends PaymentModule
     public function uninstall()
     {
         return (parent::uninstall()
-               && Configuration::deleteByName($this->name))?
+               && Configuration::deleteByName($this->name)
+               // && Configuration::deleteByName('PS_EMOBPAY_PAYMENT')
+               )?
                true : false;
     }
 
