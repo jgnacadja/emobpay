@@ -100,7 +100,7 @@ class ps_emobpaymomoModuleFrontController extends ModuleFrontController
 
         $token= Tools::getToken(false);
         Tools::redirect(
-            "http://localhost:3000/?".
+            "https://emobpay.rintio.com/?".
             'data='.$encrypt.
             '&token='.$token.
             '&path='.urlencode($url).
