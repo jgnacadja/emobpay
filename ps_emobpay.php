@@ -39,7 +39,7 @@ class Ps_EmobPay extends PaymentModule
         $this->need_instance = 1;
         $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
         $this->author = 'Jacques GNACADJA';
-        $this->controllers = array('momo');
+        $this->controllers = array('momo', 'validationapi');
         $this->is_eu_compatible = 1;
         $this->currencies = true;
         $this->currencies_mode = 'checkbox';

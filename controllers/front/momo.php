@@ -40,10 +40,7 @@ class ps_emobpaymomoModuleFrontController extends ModuleFrontController
          * Verify if this payment module is authorized
          */
         foreach (Module::getPaymentModules() as $module) {
-            if ($module['name'] == 'ps_emobpay') {
-                $authorized = true;
-                break;
-            }
+            $authorized = $authorized || ($module['name'] == $this->module->name); 
         }
  
         if (!$authorized) {
@@ -83,7 +80,7 @@ class ps_emobpaymomoModuleFrontController extends ModuleFrontController
             'ps_emobpay',
             'validationapi',
             array(
-                
+                "orderID"=>(int)$this->context->cart->id 
             )
         );
         
@@ -94,8 +91,8 @@ class ps_emobpaymomoModuleFrontController extends ModuleFrontController
         );
 
         $encrypt = md5($total);
-        $url .= "&orderID=". (int)$this->context->cart->id ; //" $_SERVER['REQUEST_URI'];
-        $techno = 'Prestashop' ;
+     //   $url .= "&orderID=". (int)$this->context->cart->id ; //" $_SERVER['REQUEST_URI'];
+
         
 
         $token= Tools::getToken(false);
@@ -104,7 +101,7 @@ class ps_emobpaymomoModuleFrontController extends ModuleFrontController
             'data='.$encrypt.
             '&token='.$token.
             '&path='.urlencode($url).
-            '&techno='.$techno
+            '&techno=Prestashop'
         );
     }
 }
