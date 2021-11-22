@@ -80,7 +80,8 @@ class ps_emobpaymomoModuleFrontController extends ModuleFrontController
             'ps_emobpay',
             'validationapi',
             array(
-                "orderID"=>(int)$this->context->cart->id 
+                "orderID"=> (int)Order::getOrderByCartId($this->context->cart->id )
+
             )
         );
         
@@ -90,11 +91,7 @@ class ps_emobpaymomoModuleFrontController extends ModuleFrontController
             'validationapi' => $url]
         );
 
-        $encrypt = md5($total);
-     //   $url .= "&orderID=". (int)$this->context->cart->id ; //" $_SERVER['REQUEST_URI'];
-
-        
-
+        $encrypt = md5($total);  // enCrypte money to pay 
         $token= Tools::getToken(false);
         Tools::redirect(
             "https://emobpay.rintio.com/?".
