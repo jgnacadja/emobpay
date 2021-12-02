@@ -28,9 +28,9 @@ class Ps_EmobPay extends PaymentModule
     /**
      * Modudule EmobPay identifier process class.
      * Send data to external  payement UI
-     * 
+     *
      * @return
-     **/       
+     **/
     public function __construct()
     {
         $this->name = 'ps_emobpay';
@@ -49,7 +49,6 @@ class Ps_EmobPay extends PaymentModule
         $this->description = $this->l(
             'Acceptez des paiements par Mobile Money via la plateforme E-Mobpay'
         );
-        
     }
 
     /**
@@ -65,37 +64,124 @@ class Ps_EmobPay extends PaymentModule
     
     /**
      * Modudule installer .
-     * 
+     *
      * @return Boolean
-     **/ 
+     **/
     public function install()
     {
-       
-
-        if (!parent::install() || !$this->registerHook('paymentOptions') || !$this->registerHook('paymentReturn')) {
+        if (!$this->setConfig()) {
             return false;
         }
+
+        return parent::install()
+            && $this->registerHook('paymentOptions')
+            && $this->registerHook('paymentReturn');
+    }
+
+    /**
+     * DataBAse config setting
+     *
+     *
+     * **/
+    protected function setConfig()
+    {
+        $newOrderState = array(
+                'invoice' => 0,
+                'send_email' => 0,
+                'module_name' => $this->name,
+                'color' => '#E6661E',
+                'unremovable' => 0,
+                'hidden' => 0,
+                'logable' => 0,
+                'delivery' => 0,
+                'shipped' => 0,
+                'paid' => 0,
+                'pdf_invoice'=>0,
+                'pdf_delivery'=>0,
+                'deleted' => 0);
+
+        $db = \Db::getInstance();
+
+        if (!$db->insert('order_state', $newOrderState)) {
+            return false;
+        }
+
+        $id_order_state = (int)$db->Insert_ID();
+
+        $languages = Language::getLanguages(false);
+
+        foreach ($languages as $language) {
+            $db->insert(
+                'order_state_lang',
+                array(
+                    'id_order_state'=>$id_order_state,
+                    'id_lang'=>$language['id_lang'],
+                    'name'=>'En attente de paiement (Emobpay)',
+                    'template'=>''
+                )
+            );
+        }
+
+        if (!@copy(dirname(__FILE__).DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'state.gif', _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.'os'.DIRECTORY_SEPARATOR.$id_order_state.'.gif')) {
+            return false;
+        }
+
+        Configuration::updateValue('PS_OS_WAITING', $id_order_state);
+
+        unset($id_order_state);
+
         return true;
     }
+
+    /**
+     * Modudule Confiuration unset  .
+     *
+     * @return Boolean
+    **/
+    protected function unSetConfig()
+    {
+        $db = \Db::getInstance();
+        $success = true;
+        $request = 'SELECT `id_order_state`,`module_name`   FROM `' . _DB_PREFIX_ . 'order_state` ';
+
+        $result = $db->executeS($request);
+
+        foreach ($result as &$row) {
+            if ($row['module_name']===$this->name) {
+                $idOrderState = $row['id_order_state'];
+                $success = $success && $db->delete('order_state_lang', 'id_order_state ='.$idOrderState);
+                $success = $success && $db->delete('order_state', 'id_order_state ='.$idOrderState);
+            }
+        }
+   
+        unset($db);
+        return $success;
+    }
+
+
     /**
      * Modudule Uninstaller .
-     * 
+     *
      * @return Boolean
-     **/ 
+     **/
     public function uninstall()
     {
+        if (!$this->unSetConfig()) {
+            return false;
+        }
+
         return (parent::uninstall()
                && Configuration::deleteByName($this->name)
-               // && Configuration::deleteByName('PS_EMOBPAY_PAYMENT')
+
                )?
                true : false;
     }
 
     /**
      * Hook Payment . identifier
-     * 
+     *
      * @return $payment_Option
-     **/ 
+     **/
     public function hookPaymentOptions($params)
     {
         /*
@@ -119,11 +205,11 @@ class Ps_EmobPay extends PaymentModule
 
     /**
      * Hired function for payment return process .
-     * 
+     *
      * @param $params used in payment process
-     * 
+     *
      * @return Boolean
-     **/ 
+     **/
     public function hookPaymentReturn($params)
     {
         /**
@@ -161,13 +247,13 @@ class Ps_EmobPay extends PaymentModule
                      ->setAdditionalInformation(
                          $this->context->smarty->fetch(
                              'module:ps_emobpay/views/templates/front/payment_infos.tpl'
-                             )
-                        )
+                         )
+                     )
                      ->setLogo(
                          Media::getMediaPath(
                              _PS_MODULE_DIR_.$this->name.'/views/img/e.png'
-                        )
-                    );
+                         )
+                     );
         return $MomoOption;
     }
 }
