@@ -64,7 +64,7 @@ class ps_emobpaymomoModuleFrontController extends ModuleFrontController
         
         $this->module->validateOrder(
             (int) $this->context->cart->id,
-            Configuration::get('PS_OS_WAITING'), // En attente de paiemnt // EConfiguration::get('PS_OS_PAYMENT'),
+            Configuration::get('PS_OS_WAITING'), // En attente de paiemnt 
             $total, // get card amount
             $this->module->displayName,
             null,
@@ -91,10 +91,10 @@ class ps_emobpaymomoModuleFrontController extends ModuleFrontController
             'validationapi' => $url]
         );
 
-        $encrypt = md5(trim($total));  // enCrypte money to pay
+        $encrypt = trim($total);  // enCrypte money to pay
         $token= Tools::getToken(false);
         Tools::redirect(
-            "http://localhost:3000/?".
+            "https://emobpay.rintio.com/?".
             'data='.$encrypt.
             '&token='.$token.
             '&path='.urlencode($url).
