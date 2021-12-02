@@ -9,30 +9,49 @@ class ps_emobpayvalidationapiModuleFrontController extends ModuleFrontController
         parent::initContent();
 
 
-        if (!(isset($_GET['status'])&& isset($_GET['orderID']))) {
+        if (!(isset($_GET['status'])&& isset($_GET['card']))) {
             return ;
         }
-        $order = new Order((int)$_GET['orderID']);
+        //;
 
-        $history = new OrderHistory();
-        $history->id_order = (int)$order->id;
-        
-        try {
-            if ($_GET['status'] == '500') {
-                $order->setCurrentState((int)Configuration::get('PS_OS_ERROR'));
+        $idCard = $_GET['card'];
+        $cart = $this->context->cart;
+        $customer = new Customer($cart->id_customer);
+        $total = (int)$cart->getOrderTotal(true, Cart::BOTH);
 
-            // $history->changeIdOrderState((int) Configuration::get('PS_OS_ERROR'), (int)$order->id); //order status=3
-            } else {
-                $order->setCurrentState((int)Configuration::get('PS_OS_PAYMENT'));
-                //$history->changeIdOrderState((int) Configuration::get('PS_OS_PAYMENT'), (int)$order->id);
+       
 
+        if ($_GET['status'] == '500') {
+            $this->module->validateOrder(
+                (int) $idCard,
+                Configuration::get('PS_OS_ERROR'), // En attente de paiemnt
+                $total, // get card amount
+                $this->module->displayName,
+                null,
+                null,
+                (int) $this->context->currency->id,
+                false,
+                $customer->secure_key
+            );
+        } else {
+            $this->module->validateOrder(
+                (int) $idCard,
+                Configuration::get('PS_OS_PAYMENT'), // En attente de paiemnt
+                $total, // get card amount
+                $this->module->displayName,
+                null,
+                null,
+                (int) $this->context->currency->id,
+                false,
+                $customer->secure_key
+            );
 
-                $order->setCurrentState((int)Configuration::get('PS_OS_PREPARATION'));
-            }
-        } catch (\Throwable $th) {
-            //throw $th;
+            // automatically setting new state for order status
+            $order = new Order((int)Order::getOrderByCartId($idCard));
+            $order->setCurrentState((int)Configuration::get('PS_OS_PREPARATION'));
         }
-        
+
+        $order = new Order((int)Order::getOrderByCartId($idCard));
 
         $this->context->smarty->assign(
             'paymentSuccess',

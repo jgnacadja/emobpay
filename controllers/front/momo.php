@@ -62,25 +62,15 @@ class ps_emobpaymomoModuleFrontController extends ModuleFrontController
          */
         $total = (int)$cart->getOrderTotal(true, Cart::BOTH);
         
-        $this->module->validateOrder(
-            (int) $this->context->cart->id,
-            Configuration::get('PS_OS_WAITING'), // En attente de paiemnt 
-            $total, // get card amount
-            $this->module->displayName,
-            null,
-            null,
-            (int) $this->context->currency->id,
-            false,
-            $customer->secure_key
-        );
-
+        
         
         
         $url = Context::getContext()->link->getModuleLink(
             'ps_emobpay',
             'validationapi',
             array(
-                "orderID"=> (int)Order::getOrderByCartId($this->context->cart->id)
+                "card"=> $this->context->cart->id
+               // "orderID"=> (int)Order::getOrderByCartId($this->context->cart->id)
 
             )
         );
