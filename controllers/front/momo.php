@@ -70,8 +70,6 @@ class ps_emobpaymomoModuleFrontController extends ModuleFrontController
             'validationapi',
             array(
                 "card"=> $this->context->cart->id
-               // "orderID"=> (int)Order::getOrderByCartId($this->context->cart->id)
-
             )
         );
         
