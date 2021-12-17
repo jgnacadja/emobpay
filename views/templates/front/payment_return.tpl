@@ -5,7 +5,7 @@
   <section>
      {if $paymentSuccess}
      <p>{l s='Féliciation votre paiement a bien été validé.'}</p>
-    <p>{l s="Nous vous remercions pour la confiance et vous invitons à consulter les details de votre comane dans votre compte."}</p>
+    <p>{l s="Nous vous remercions pour la confiance et vous invitons à consulter les details de votre commande dans votre compte."}</p>
     {else}
 
      <p>{l s='Désolé, votre paiement a été refusé'}</p>
